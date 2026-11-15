@@ -1,0 +1,163 @@
+/* ===== Login ===== */
+body.login-page {
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+}
+
+.login-card {
+  width: 100%;
+  max-width: 420px;
+  background-color: var(--bg-card);
+  border-radius: 16px;
+  padding: 32px 30px 28px;
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);
+}
+
+.login-top {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 15px;
+  margin-bottom: 30px;
+}
+
+/* Marca provisional de la universidad: reemplazar por el logo oficial */
+.ucc-badge {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  text-align: right;
+  line-height: 1.2;
+}
+
+.ucc-badge strong {
+  font-size: 20px;
+  font-weight: 800;
+  color: var(--accent-green);
+  letter-spacing: 1px;
+}
+
+.ucc-badge span {
+  font-size: 8px;
+  font-weight: 600;
+  letter-spacing: 0.5px;
+  text-transform: uppercase;
+  color: var(--text-muted);
+}
+
+.form-group {
+  margin-bottom: 18px;
+}
+
+.form-group label {
+  display: block;
+  margin-bottom: 6px;
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  color: var(--text-muted);
+}
+
+.form-group input {
+  width: 100%;
+  padding: 12px 14px;
+  border: 2px solid transparent;
+  border-radius: 8px;
+  background-color: #e8eefc;
+  color: var(--text-dark);
+  font-size: 14px;
+  transition: border-color 0.2s ease;
+}
+
+.form-group input:focus {
+  outline: none;
+  border-color: var(--btn-active);
+}
+
+.forgot-link {
+  display: inline-block;
+  margin-bottom: 22px;
+  font-size: 12px;
+  color: var(--text-muted);
+  text-decoration: none;
+}
+
+.forgot-link:hover {
+  color: var(--btn-active);
+  text-decoration: underline;
+}
+
+.forgot-link:focus-visible {
+  outline: 3px solid var(--avatar-border);
+  outline-offset: 2px;
+}
+
+.btn-login {
+  width: 100%;
+  padding: 13px;
+  border: none;
+  border-radius: 12px;
+  background-color: var(--accent-yellow);
+  color: var(--text-dark);
+  font-size: 14px;
+  font-weight: 700;
+  cursor: pointer;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  transition: transform 0.1s;
+}
+
+.btn-login:hover {
+  transform: scale(1.02);
+}
+
+.btn-login:focus-visible {
+  outline: 3px solid var(--avatar-border);
+  outline-offset: 2px;
+}
+
+@media (max-width: 420px) {
+  .login-card {
+    padding: 24px 20px;
+  }
+
+  .login-top {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .ucc-badge {
+    align-items: flex-start;
+    text-align: left;
+  }
+}
+
+/* ===== Mensajes del login ===== */
+.form-error {
+  margin-bottom: 16px;
+  padding: 10px 14px;
+  border-left: 4px solid var(--alert-red);
+  border-radius: 6px;
+  background-color: var(--bg-main);
+  font-size: 12px;
+  color: var(--alert-red);
+}
+
+.login-hint {
+  margin-top: 22px;
+  padding-top: 16px;
+  border-top: 1px solid var(--btn-inactive);
+  font-size: 11px;
+  line-height: 1.6;
+  text-align: center;
+  color: var(--text-muted);
+}
+
+.login-hint code {
+  padding: 1px 6px;
+  border-radius: 4px;
+  background-color: var(--bg-main);
+  color: var(--btn-active);
+  font-size: 11px;
+}

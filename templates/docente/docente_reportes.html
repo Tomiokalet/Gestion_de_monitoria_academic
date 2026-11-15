@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Reportes de Sesiones - Monitorías Académicas</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="../../static/css/estilo.css">
+    <link rel="stylesheet" href="../../static/css/secciones.css">
+    <link rel="stylesheet" href="../../static/css/docente_reportes.css">
+    <link rel="stylesheet" href="../../static/css/extras.css">
+</head>
+<body>
+
+    <header>
+        <div class="brand-container">
+            <div class="brand-logo">
+                <img src="../../static/Logo_Monitorias.png" alt="Logo Monitorías Académicas">
+            </div>
+            <div class="brand-title">
+                <h1>Monitorías</h1>
+                <p>Académicas</p>
+            </div>
+        </div>
+
+        <a class="user-profile" href="../perfil/perfil_docente.html" aria-label="Ver mi perfil">
+            <div class="user-avatar" aria-hidden="true">
+                <svg viewBox="0 0 24 24" width="26" height="26" fill="#1a2735" aria-hidden="true">
+                    <circle cx="12" cy="8" r="4.5"/>
+                    <path d="M3 22c0-5 4-8 9-8s9 3 9 8z"/>
+                </svg>
+            </div>
+            <div class="user-info">
+                <h2>Dr. Ramírez</h2>
+                <p>Docente / Jefe de Bienestar</p>
+            </div>
+        </a>
+    </header>
+
+    <div class="main-layout main-layout--two">
+
+        <!-- Navegación Lateral Completa -->
+        <nav class="sidebar" aria-label="Navegación principal">
+            <a class="nav-btn inactive" href="docente.html">Resumen General</a>
+            <a class="nav-btn inactive" href="docente_monitores.html">Mis Monitores</a>
+            <a class="nav-btn inactive" href="docente_solicitudes.html">Solicitudes</a>
+            <a class="nav-btn inactive" href="docente_seguimiento.html">Seguimiento Académico</a>
+            <a class="nav-btn inactive" href="docente_alertas.html">Alertas Tempranas</a>
+            <a class="nav-btn active" href="docente_reportes.html" aria-current="page">Reportes de Sesiones</a>
+            <a class="nav-btn inactive" href="docente_chat.html">Mensajería</a>
+            <a class="nav-btn inactive logout" href="../inicio/login.html">Cerrar Sesión</a>
+        </nav>
+
+        <!-- Panel Central -->
+        <main class="central-panel section-panel">
+            <section>
+                <div class="panel-header">
+                    <div>
+                        <h2>Reporte General de Asistencia y Sesiones</h2>
+                        <p class="section-subtitle">Consolidado histórico de tutorías dictadas, asistencias, modalidades y horas registradas</p>
+                    </div>
+                    <div class="toolbar"><button type="button" class="btn-exportar" data-export="t-reportes" data-archivo="reporte_sesiones">📥 Exportar CSV</button>
+                        <button type="button" class="btn-exportar" data-imprimir>🖨 Imprimir / PDF</button></div>
+                </div>
+
+                <!-- Tarjetas KPI de Reportes -->
+                <div class="kpi-grid">
+                    <div class="kpi-card">
+                        <p class="kpi-label">Total Sesiones Dictadas</p>
+                        <p class="kpi-value">95</p>
+                    </div>
+                    <div class="kpi-card">
+                        <p class="kpi-label">Asistencia Efectiva</p>
+                        <p class="kpi-value" style="color: var(--btn-active, #1abc9c);">88%</p>
+                    </div>
+                    <div class="kpi-card">
+                        <p class="kpi-label">Horas Acumuladas</p>
+                        <p class="kpi-value">142 h</p>
+                    </div>
+                    <div class="kpi-card">
+                        <p class="kpi-label">Inasistencias</p>
+                        <p class="kpi-value" style="color: var(--alert-red, #e74c3c);">12</p>
+                    </div>
+                </div>
+
+                <!-- Barra de Búsqueda y Filtros -->
+                <div class="filter-bar">
+                    <input type="search" class="filter-input" data-target="t-reportes" placeholder="Buscar por estudiante, monitor o materia..." aria-label="Buscar en reportes">
+                    <select class="filter-select" data-target="t-reportes" aria-label="Filtrar por asistencia">
+                        <option value="">Todas las asistencias</option>
+                        <option value="Presente">Presente</option>
+                        <option value="Ausente">Ausente</option>
+                        <option value="Excusa">Excusa</option>
+                    </select>
+                    <select class="filter-select" data-target="t-reportes" aria-label="Filtrar por modalidad">
+                        <option value="">Todas las modalidades</option>
+                        <option value="Presencial">Presencial</option>
+                        <option value="Virtual">Virtual</option>
+                    </select>
+                </div>
+
+                <p class="table-hint">Visualización en tiempo real de los reportes enviados por los monitores tras cada sesión.</p>
+
+                <!-- Tabla Consolidada de Reportes -->
+                <div class="table-scroll">
+                    <table class="data-table" id="t-reportes">
+                        <thead>
+                            <tr>
+                                <th scope="col">Fecha</th>
+                                <th scope="col">Estudiante</th>
+                                <th scope="col">Monitor Asignado</th>
+                                <th scope="col">Materia / Apoyo</th>
+                                <th scope="col">Modalidad</th>
+                                <th scope="col">Asistencia</th>
+                                <th scope="col">Valoración</th>
+                                <th scope="col">Temática</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr data-id="1">
+                                <td>17/10/2026</td>
+                                <td>Ana Gómez</td>
+                                <td>Pepito Pérez</td>
+                                <td>Cálculo I</td>
+                                <td>Presencial</td>
+                                <td><span class="pill pill-ok">Presente</span></td>
+                                <td><span class="pill pill-ok">4.5</span></td>
+                                <td>Límites al infinito</td>
+                            </tr>
+                            <tr data-id="2">
+                                <td>16/10/2026</td>
+                                <td>Carlos Díaz</td>
+                                <td>Carlos Díaz</td>
+                                <td>Estadística</td>
+                                <td>Virtual</td>
+                                <td><span class="pill pill-ok">Presente</span></td>
+                                <td><span class="pill pill-warn">3.2</span></td>
+                                <td>Distribución normal</td>
+                            </tr>
+                            <tr data-id="3">
+                                <td>15/10/2026</td>
+                                <td>Luis Pérez</td>
+                                <td>Pepito Pérez</td>
+                                <td>Programación Web</td>
+                                <td>Virtual</td>
+                                <td><span class="pill pill-bad">Ausente</span></td>
+                                <td><span class="pill pill-info">Sin evaluar</span></td>
+                                <td>—</td>
+                            </tr>
+                            <tr data-id="4">
+                                <td>14/10/2026</td>
+                                <td>María Ruiz</td>
+                                <td>Laura Medina</td>
+                                <td>Física</td>
+                                <td>Presencial</td>
+                                <td><span class="pill pill-ok">Presente</span></td>
+                                <td><span class="pill pill-ok">4.0</span></td>
+                                <td>Cinemática y vectores</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <p class="table-empty" id="t-reportes-vacio" hidden>No se encontraron registros en el reporte con los filtros aplicados.</p>
+            </section>
+        </main>
+
+    </div>
+    <script src="../../js/comun.js"></script>
+    <script src="../../js/filtro.js"></script>
+
+</body>
+</html>

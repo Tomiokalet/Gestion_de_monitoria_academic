@@ -1,0 +1,16 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Error {{ codigo }} - Monitorías</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/estilo.css') }}">
+</head>
+<body>
+  <main class="central-panel" style="margin: 3rem auto; max-width: 700px; padding: 2rem">
+    <h1>Error {{ codigo }}</h1>
+    <p>{{ mensaje }}</p>
+    <a href="{{ url_for('login') }}">Volver al inicio de sesión</a>
+  </main>
+</body>
+</html>

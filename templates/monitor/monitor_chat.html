@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mensajería - Monitorías Académicas</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/estilo.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/secciones.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/chat.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/extras.css') }}">
+</head>
+<body>
+
+    <header>
+        <div class="brand-container">
+            <div class="brand-logo">
+                <img src="{{ url_for('static', filename='Logo_Monitorias.png') }}" alt="Logo Monitorías Académicas">
+            </div>
+            <div class="brand-title">
+                <h1>Monitorías</h1>
+                <p>Académicas</p>
+            </div>
+        </div>
+
+        <a class="user-profile" href="{{ url_for('pages', page='perfil/perfil_estudiante.html') }}" aria-label="Ver mi perfil">
+            <div class="user-avatar" aria-hidden="true">
+                <svg viewBox="0 0 24 24" width="26" height="26" fill="#1a2735" aria-hidden="true"><circle cx="12" cy="8" r="4.5"/><path d="M3 22c0-5 4-8 9-8s9 3 9 8z"/></svg>
+            </div>
+            <div class="user-info">
+                <h2>{{ usuario }}</h2>
+                <p>Monitor</p>
+            </div>
+        </a>
+    </header>
+
+    <div class="main-layout main-layout--two">
+
+        <nav class="sidebar" aria-label="Navegación principal">
+            <a class="nav-btn inactive" href="{{ url_for('pages', page='monitor/monitor.html') }}">Inicio</a>
+            <a class="nav-btn inactive" href="{{ url_for('pages', page='monitor/monitor_sesiones.html') }}">Sesiones (calendario)</a>
+            <a class="nav-btn inactive" href="{{ url_for('pages', page='monitor/monitor_historial.html') }}">Historial de Monitorías</a>
+            <a class="nav-btn active" href="{{ url_for('pages', page='monitor/monitor_chat.html') }}" aria-current="page">Mensajería</a>
+            <form action="{{ url_for('logout') }}" method="POST" style="display: inline;">
+                <button type="submit" class="nav-btn inactive logout" style="width: 100%; text-align: left; border: none; background: none; cursor: pointer;">Cerrar Sesión</button>
+            </form>
+        </nav>
+
+        <main class="central-panel section-panel">
+            <div class="panel-header" style="margin-bottom: 15px;">
+                <div>
+                    <h2>Centro de Mensajería</h2>
+                    <p class="section-subtitle">Canal directo de comunicación</p>
+                </div>
+            </div>
+            <div class="chat-container">
+                <div class="chat-sidebar-contacts">
+                    <ul class="contacts-list">
+                        {% for u in todos_usuarios %}
+                        <li class="contact-item">
+                            <a href="{{ url_for('pages', page='monitor/monitor_chat.html') }}?chat_con={{ u.id_usuario }}" style="text-decoration: none; color: inherit; display: flex; align-items: center; width: 100%; gap: 10px;">
+                                <div class="contact-avatar">👤</div>
+                                <div class="contact-info">
+                                    <h4>{{ u.nombres }} {{ u.apellidos }}</h4>
+                                    <p>{{ u.correo_institucional }}</p>
+                                </div>
+                            </a>
+                        </li>
+                        {% endfor %}
+                    </ul>
+                </div>
+                <div class="chat-main-area">
+                    {% if contacto_activo %}
+                    <div class="chat-header-info">
+                        <h4>Chat con: {{ contacto_activo.nombres }} {{ contacto_activo.apellidos }}</h4>
+                    </div>
+                    <div class="chat-messages-box">
+                        {% for m in mensajes %}
+                        <div style="margin-bottom: 10px; padding: 8px; border-radius: 6px; background: {% if m.id_remitente == session.user_id %}rgba(26,188,156,0.2){% else %}rgba(255,255,255,0.05%){% endif %};">
+                            <p style="margin: 0; font-size: 14px; color: #fff;">{{ m.contenido }}</p>
+                            <small style="font-size: 10px; color: #a0aec0;">{{ m.fecha_envio }}</small>
+                        </div>
+                        {% else %}
+                        <p style="color: #a0aec0; text-align: center; margin-top: 40px;">No hay mensajes aún con este usuario.</p>
+                        {% endfor %}
+                    </div>
+                    <form action="{{ url_for('enviar_mensaje') }}" method="POST" class="chat-input-box">
+                        <input type="hidden" name="id_destinatario" value="{{ contacto_activo.id_usuario }}">
+                        <input type="text" name="contenido" placeholder="Escribe un mensaje..." autocomplete="off" required>
+                        <button type="submit" class="btn-send">Enviar</button>
+                    </form>
+                    {% else %}
+                    <div style="display: flex; align-items: center; justify-content: center; height: 100%; color: #a0aec0;">
+                        <p>Selecciona un contacto a la izquierda para iniciar el chat.</p>
+                    </div>
+                    {% endif %}
+                </div>
+            </div>
+        </main>
+
+    </div>
+</body>
+</html>

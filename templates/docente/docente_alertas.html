@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Alertas Docente - Monitorías Académicas</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="../../static/css/estilo.css">
+    <link rel="stylesheet" href="../../static/css/docente.css">
+    <link rel="stylesheet" href="../../static/css/extras.css">
+</head>
+<body>
+
+    <header>
+        <div class="brand-container">
+            <div class="brand-logo">
+                <img src="../../static/Logo_Monitorias.png" alt="Logo Monitorías Académicas">
+            </div>
+            <div class="brand-title">
+                <h1>Monitorías</h1>
+                <p>Académicas</p>
+            </div>
+        </div>
+
+        <a class="user-profile" href="../perfil/perfil_docente.html" aria-label="Ver perfil docente">
+            <div class="user-avatar" aria-hidden="true">
+                <svg viewBox="0 0 24 24" width="26" height="26" fill="#1a2735" aria-hidden="true"><circle cx="12" cy="8" r="4.5"/><path d="M3 22c0-5 4-8 9-8s9 3 9 8z"/></svg>
+            </div>
+            <div class="user-info">
+                <h2>Dr. Ramírez</h2>
+                <p>Docente / Jefe de Bienestar</p>
+            </div>
+        </a>
+    </header>
+
+    <div class="main-layout two-col">
+
+        <nav class="sidebar" aria-label="Navegación principal">
+            <a class="nav-btn inactive" href="docente.html">Resumen General</a>
+            <a class="nav-btn inactive" href="docente_monitores.html">Mis Monitores</a>
+            <a class="nav-btn inactive" href="docente_solicitudes.html">Solicitudes</a>
+            <a class="nav-btn inactive" href="docente_seguimiento.html">Seguimiento Académico</a>
+            <a class="nav-btn active" aria-current="page" href="docente_alertas.html">Alertas Tempranas</a>
+            <a class="nav-btn inactive" href="docente_reportes.html">Reportes de Sesiones</a>
+             <a class="nav-btn inactive" href="docente_chat.html">Mensajería</a>
+            <a class="nav-btn inactive logout" href="../inicio/login.html">Cerrar Sesión</a>
+        </nav>
+
+        <main class="content">
+            <section class="central-panel panel-table">
+                <div class="panel-header">
+                    <h2>Alertas por Revisar</h2>
+                    <a class="btn-assignments" href="docente.html">← Volver al Resumen</a>
+                </div>
+
+                
+                <div class="filter-bar">
+                    <input type="search" class="filter-input" data-target="t-alertas-doc" placeholder="Buscar por estudiante, monitor o motivo..." aria-label="Buscar alertas">
+                    <select class="filter-select" data-target="t-alertas-doc" aria-label="Filtrar por prioridad"><option value="">Todas las prioridades</option><option value="Alta">Alta</option><option value="Media">Media</option></select>
+                </div>
+                <p class="table-hint" id="alertas-pendientes"></p>
+                <div class="table-scroll">
+                    <table id="t-alertas-doc">
+                        <thead>
+                            <tr>
+                                <th>Estudiante</th>
+                                <th>Monitor Asignado</th>
+                                <th>Materia / Área</th>
+                                <th>Motivo</th>
+                                <th>Prioridad</th>
+                                <th>Fecha</th>
+                                <th>Acciones</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>María Fernanda Gómez</td>
+                                <td>Pepito Pérez</td>
+                                <td>Programación Web</td>
+                                <td>Promedio bajo (2.8) en Corte 2</td>
+                                <td><span class="status-badge status-alert">Alta</span></td>
+                                <td>15 Oct 2026</td>
+                            <td><div class="row-actions"><button type="button" class="btn-action-sm" data-revisar>Marcar revisada</button> <a class="btn-action-sm" href="docente_chat.html?contacto=PepitoPerez">Contactar</a></div></td>
+                            </tr>
+                            <tr>
+                                <td>Andrés Felipe Caicedo</td>
+                                <td>Laura Medina</td>
+                                <td>Estructura de Datos</td>
+                                <td>Promedio en observación (3.0)</td>
+                                <td><span class="status-badge status-warning">Media</span></td>
+                                <td>12 Oct 2026</td>
+                            <td><div class="row-actions"><button type="button" class="btn-action-sm" data-revisar>Marcar revisada</button> <a class="btn-action-sm" href="docente_chat.html?contacto=LauraMedina">Contactar</a></div></td>
+                            </tr>
+                            <tr>
+                                <td>Camila Torres</td>
+                                <td>Laura Medina</td>
+                                <td>Bases de Datos</td>
+                                <td>Inasistencia a 2 sesiones seguidas</td>
+                                <td><span class="status-badge status-warning">Media</span></td>
+                                <td>10 Oct 2026</td>
+                            <td><div class="row-actions"><button type="button" class="btn-action-sm" data-revisar>Marcar revisada</button> <a class="btn-action-sm" href="docente_chat.html?contacto=LauraMedina">Contactar</a></div></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <p class="table-empty" id="t-alertas-doc-vacio" hidden>No hay alertas con los filtros aplicados.</p>
+            </section>
+        </main>
+    </div>
+
+    <script src="../../js/comun.js"></script>
+    <script src="../../js/filtro.js"></script>
+    <script src="../../js/docente_alertas.js"></script>
+
+</body>
+</html>

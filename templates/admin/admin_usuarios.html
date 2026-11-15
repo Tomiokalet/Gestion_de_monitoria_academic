@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gestión de Usuarios - Administrador</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/estilo.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/admin.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/secciones.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/extras.css') }}">
+</head>
+<body>
+
+    <header>
+        <div class="brand-container">
+            <div class="brand-logo">
+                <img src="{{ url_for('static', filename='Logo_Monitorias.png') }}" alt="Logo Monitorías Académicas">
+            </div>
+            <div class="brand-title">
+                <h1>Monitorías</h1>
+                <p>Académicas</p>
+            </div>
+        </div>
+
+        <a class="user-profile" href="{{ url_for('pages', page='perfil/perfil_admin.html') }}" aria-label="Ver mi perfil">
+            <div class="user-avatar" aria-hidden="true">
+                <svg viewBox="0 0 24 24" width="26" height="26" fill="#1a2735" aria-hidden="true"><circle cx="12" cy="8" r="4.5"/><path d="M3 22c0-5 4-8 9-8s9 3 9 8z"/></svg>
+            </div>
+            <div class="user-info">
+                <h2>{{ usuario }}</h2>
+                <p>Super administrador · Jefe de Bienestar</p>
+            </div>
+        </a>
+    </header>
+
+    <div class="main-layout main-layout--two">
+
+        <nav class="sidebar" aria-label="Navegación principal">
+            <a class="nav-btn inactive" href="{{ url_for('pages', page='admin/admin.html') }}">Información General</a>
+            <a class="nav-btn active" href="{{ url_for('pages', page='admin/admin_usuarios.html') }}" aria-current="page">Gestión Usuarios</a>
+            <a class="nav-btn inactive" href="{{ url_for('pages', page='admin/admin_monitorias.html') }}">Gestión Monitorías</a>
+            <a class="nav-btn inactive" href="{{ url_for('pages', page='admin/admin_asignaciones.html') }}">Asignaciones</a>
+            <a class="nav-btn inactive" href="{{ url_for('pages', page='admin/admin_reportes.html') }}">Reportes y Alertas</a>
+            <form action="{{ url_for('logout') }}" method="POST" style="display: inline;">
+                <button type="submit" class="nav-btn inactive logout" style="width: 100%; text-align: left; border: none; background: none; cursor: pointer;">Cerrar Sesión</button>
+            </form>
+        </nav>
+
+        <main class="central-panel section-panel">
+            <section>
+                <div class="panel-header">
+                    <div>
+                        <h2>Gestión de Usuarios</h2>
+                        <p class="section-subtitle">Listado general de usuarios registrados, control de estado global y de monitoría.</p>
+                    </div>
+                    <a href="{{ url_for('pages', page='admin/admin_crear_usuario.html') }}" class="btn-primary" style="text-decoration: none; display: inline-block; line-height: normal;">+ Registrar nuevo usuario</a>
+                </div>
+
+                {% with messages = get_flashed_messages(with_categories=true) %}
+                    {% if messages %}
+                        {% for category, message in messages %}
+                            <div style="padding: 10px; margin-bottom: 15px; border-radius: 5px; background: {% if category == 'error' %}rgba(255,107,107,0.2){% else %}rgba(51,217,178,0.2){% endif %}; color: #fff; margin-top: 15px;">
+                                {{ message }}
+                            </div>
+                        {% endfor %}
+                    {% endif %}
+                {% endwith %}
+
+                <div class="table-scroll" style="margin-top: 20px;">
+                    <table class="data-table">
+                        <thead>
+                            <tr>
+                                <th scope="col">Documento</th>
+                                <th scope="col">Nombres y Apellidos</th>
+                                <th scope="col">Correo Institucional</th>
+                                <th scope="col">Teléfono</th>
+                                <th scope="col">Rol(es)</th>
+                                <th scope="col">Estado General</th>
+                                <th scope="col">Acciones</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for u in usuarios %}
+                            <tr>
+                                <td>{{ u.documento }}</td>
+                                <td>{{ u.nombres }} {{ u.apellidos }}</td>
+                                <td>{{ u.correo_institucional }}</td>
+                                <td>{{ u.telefono or 'N/A' }}</td>
+                                <td>
+                                    {{ u.rol or 'Sin Rol' }}
+                                    {% if u.estado_monitor == 'Inactivo' %}
+                                        <span style="font-size: 10px; color: #ffa500; display: block;">(Monitor Inactivo)</span>
+                                    {% endif %}
+                                </td>
+                                <td>
+                                    <span class="badge" style="background: {% if u.estado == 'Inactivo' %}rgba(255,107,107,0.3){% else %}rgba(51,217,178,0.3){% endif %}; color: #fff;">
+                                        {{ u.estado or 'Activo' }}
+                                    </span>
+                                </td>
+                                <td>
+                                    <div style="display: flex; gap: 6px; align-items: center; flex-wrap: wrap;">
+                                        <!-- Botón para Inhabilitar / Activar cuenta global -->
+                                        <form action="{{ url_for('cambiar_estado_usuario', uid=u.id_usuario) }}" method="POST" style="margin:0;">
+                                            <button type="submit" class="btn-ghost-sm" style="font-size: 11px; padding: 4px 8px; color: {% if u.estado == 'Inactivo' %}#33d9b2{% else %}#ff6b6b{% endif %}; border-color: currentColor; background: none; cursor: pointer; border-radius: 4px;">
+                                                {% if u.estado == 'Inactivo' %}Activar Cuenta{% else %}Inhabilitar Cuenta{% endif %}
+                                            </button>
+                                        </form>
+
+                                        <!-- Opción 1: Es estudiante y NUNCA ha sido monitor -->
+                                        {% if 'Estudiante' in u.rol and 'Monitor' not in u.rol and u.estado_monitor != 'Inactivo' %}
+                                        <form action="{{ url_for('ascender_a_monitor', uid=u.id_usuario) }}" method="POST" style="margin:0;">
+                                            <button type="submit" class="btn-ghost-sm" style="font-size: 11px; padding: 4px 8px; color: #00d2ff; border-color: #00d2ff; background: none; cursor: pointer; border-radius: 4px;">
+                                                Hacer Monitor
+                                            </button>
+                                        </form>
+                                        {% endif %}
+
+                                        <!-- Opción 2: Es Monitor ACTIVO -> Permitir inhabilitar solo el rol de monitor -->
+                                        {% if 'Monitor' in u.rol or u.estado_monitor == 'Activo' %}
+                                        <form action="{{ url_for('revocar_monitor', uid=u.id_usuario) }}" method="POST" style="margin:0;">
+                                            <button type="submit" class="btn-ghost-sm" style="font-size: 11px; padding: 4px 8px; color: #ffa500; border-color: #ffa500; background: none; cursor: pointer; border-radius: 4px;" onclick="return confirm('¿Seguro que deseas inhabilitar el rol de monitor? Su registro histórico se conservará.');">
+                                                Inhabilitar Monitor
+                                            </button>
+                                        </form>
+                                        {% elif u.estado_monitor == 'Inactivo' %}
+                                        <!-- Opción 3: Fue monitor y está INACTIVO -> Permitir reactivarlo -->
+                                        <form action="{{ url_for('ascender_a_monitor', uid=u.id_usuario) }}" method="POST" style="margin:0;">
+                                            <button type="submit" class="btn-ghost-sm" style="font-size: 11px; padding: 4px 8px; color: #33d9b2; border-color: #33d9b2; background: none; cursor: pointer; border-radius: 4px;">
+                                                Reactivar Monitor
+                                            </button>
+                                        </form>
+                                        {% endif %}
+                                    </div>
+                                </td>
+                            </tr>
+                            {% else %}
+                            <tr>
+                                <td colspan="7" class="table-empty">No hay usuarios registrados actualmente en la base de datos.</td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </section>
+        </main>
+
+    </div>
+
+</body>
+</html>

@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Reportes y Alertas - Administrador</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/estilo.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/admin.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/secciones.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/extras.css') }}">
+</head>
+<body>
+
+    <header>
+        <div class="brand-container">
+            <div class="brand-logo">
+                <img src="{{ url_for('static', filename='Logo_Monitorias.png') }}" alt="Logo Monitorías Académicas">
+            </div>
+            <div class="brand-title">
+                <h1>Monitorías</h1>
+                <p>Académicas</p>
+            </div>
+        </div>
+
+        <a class="user-profile" href="{{ url_for('pages', page='perfil/perfil_admin.html') }}" aria-label="Ver mi perfil">
+            <div class="user-avatar" aria-hidden="true">
+                <svg viewBox="0 0 24 24" width="26" height="26" fill="#1a2735" aria-hidden="true"><circle cx="12" cy="8" r="4.5"/><path d="M3 22c0-5 4-8 9-8s9 3 9 8z"/></svg>
+            </div>
+            <div class="user-info">
+                <h2>{{ usuario }}</h2>
+                <p>Super administrador</p>
+            </div>
+        </a>
+    </header>
+
+    <div class="main-layout main-layout--two">
+
+        <nav class="sidebar" aria-label="Navegación principal">
+            <a class="nav-btn inactive" href="{{ url_for('pages', page='admin/admin.html') }}">Información General</a>
+            <a class="nav-btn inactive" href="{{ url_for('pages', page='admin/admin_usuarios.html') }}">Gestión Usuarios</a>
+            <a class="nav-btn inactive" href="{{ url_for('pages', page='admin/admin_monitorias.html') }}">Gestión Monitorías</a>
+            <a class="nav-btn inactive" href="{{ url_for('pages', page='admin/admin_asignaciones.html') }}">Asignaciones</a>
+            <a class="nav-btn active" href="{{ url_for('pages', page='admin/admin_reportes.html') }}" aria-current="page">Reportes y Alertas</a>
+            <form action="{{ url_for('logout') }}" method="POST" style="display: inline;">
+                <button type="submit" class="nav-btn inactive logout" style="width: 100%; text-align: left; border: none; background: none; cursor: pointer;">Cerrar Sesión</button>
+            </form>
+        </nav>
+
+        <main class="central-panel section-panel">
+            <section>
+                <div class="panel-header">
+                    <div>
+                        <h2>Reportes y Alertas Tempranas</h2>
+                        <p class="section-subtitle">Visualización general del rendimiento institucional, estadísticas y seguimiento de alertas.</p>
+                    </div>
+                </div>
+
+                <!-- Tarjetas de Estadísticas Resumidas -->
+                <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 15px; margin-top: 20px;">
+                    <div style="background: rgba(0, 210, 255, 0.1); border: 1px solid rgba(0, 210, 255, 0.3); padding: 15px; border-radius: 8px;">
+                        <h3 style="font-size: 14px; color: #00d2ff; margin-bottom: 5px;">Alertas Activas</h3>
+                        <p style="font-size: 24px; font-weight: bold; color: #fff; margin: 0;">{{ total_alertas or 0 }}</p>
+                    </div>
+                    <div style="background: rgba(51, 217, 178, 0.1); border: 1px solid rgba(51, 217, 178, 0.3); padding: 15px; border-radius: 8px;">
+                        <h3 style="font-size: 14px; color: #33d9b2; margin-bottom: 5px;">Total Solicitudes</h3>
+                        <p style="font-size: 24px; font-weight: bold; color: #fff; margin: 0;">{{ total_solicitudes or 0 }}</p>
+                    </div>
+                    <div style="background: rgba(255, 165, 0, 0.1); border: 1px solid rgba(255, 165, 0, 0.3); padding: 15px; border-radius: 8px;">
+                        <h3 style="font-size: 14px; color: #ffa500; margin-bottom: 5px;">Sesiones Registradas</h3>
+                        <p style="font-size: 24px; font-weight: bold; color: #fff; margin: 0;">{{ total_sesiones or 0 }}</p>
+                    </div>
+                </div>
+
+                <!-- Tabla de Alertas Tempranas Detalladas -->
+                <h3 style="margin-top: 30px; font-size: 1.1rem; color: #fff; border-bottom: 1px solid #223447; padding-bottom: 8px;">Detalle de Alertas Tempranas (Docentes)</h3>
+                
+                <div class="table-scroll" style="margin-top: 15px;">
+                    <table class="data-table">
+                        <thead>
+                            <tr>
+                                <th scope="col">Estudiante</th>
+                                <th scope="col">Correo</th>
+                                <th scope="col">Corte / Momento</th>
+                                <th scope="col">Promedio</th>
+                                <th scope="col">Observación del Docente</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for a in alertas_detalladas %}
+                            <tr>
+                                <td>{{ a.estudiante }}</td>
+                                <td>{{ a.correo_institucional }}</td>
+                                <td>{{ a.momento_o_corte }}</td>
+                                <td>{{ a.calificacion_promedio or 'N/A' }}</td>
+                                <td>{{ a.observacion_docente }}</td>
+                            </tr>
+                            {% else %}
+                            <tr>
+                                <td colspan="5" class="table-empty">No hay alertas tempranas activas registradas en el sistema.</td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </section>
+        </main>
+
+    </div>
+
+</body>
+</html>

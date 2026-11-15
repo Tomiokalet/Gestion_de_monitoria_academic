@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Solicitudes y Asignaciones - Docente</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/estilo.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/admin.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/secciones.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/extras.css') }}">
+</head>
+<body>
+
+    <header>
+        <div class="brand-container">
+            <div class="brand-logo">
+                <img src="{{ url_for('static', filename='Logo_Monitorias.png') }}" alt="Logo Monitorías Académicas">
+            </div>
+            <div class="brand-title">
+                <h1>Monitorías</h1>
+                <p>Académicas</p>
+            </div>
+        </div>
+
+        <a class="user-profile" href="{{ url_for('pages', page='perfil/perfil_docente.html') }}" aria-label="Ver mi perfil">
+            <div class="user-avatar" aria-hidden="true">
+                <svg viewBox="0 0 24 24" width="26" height="26" fill="#1a2735" aria-hidden="true"><circle cx="12" cy="8" r="4.5"/><path d="M3 22c0-5 4-8 9-8s9 3 9 8z"/></svg>
+            </div>
+            <div class="user-info">
+                <h2>{{ usuario }}</h2>
+                <p>Docente / Profesor</p>
+            </div>
+        </a>
+    </header>
+
+    <div class="main-layout main-layout--two">
+
+        <nav class="sidebar" aria-label="Navegación principal">
+            <a class="nav-btn inactive" href="{{ url_for('pages', page='docente/docente.html') }}">Panel Principal</a>
+            <a class="nav-btn active" href="{{ url_for('pages', page='docente/docente_solicitudes.html') }}" aria-current="page">Solicitudes</a>
+            <a class="nav-btn inactive" href="{{ url_for('pages', page='docente/docente_monitores.html') }}">Monitores Asignados</a>
+            <a class="nav-btn inactive" href="{{ url_for('pages', page='docente/docente_seguimiento.html') }}">Seguimiento Académico</a>
+            <a class="nav-btn inactive" href="{{ url_for('pages', page='docente/docente_chat.html') }}">Mensajería</a>
+            <form action="{{ url_for('logout') }}" method="POST" style="display: inline;">
+                <button type="submit" class="nav-btn inactive logout" style="width: 100%; text-align: left; border: none; background: none; cursor: pointer;">Cerrar Sesión</button>
+            </form>
+        </nav>
+
+        <main class="central-panel section-panel">
+            <section>
+                <div class="panel-header">
+                    <div>
+                        <h2>Gestión de Solicitudes y Asignación de Monitores</h2>
+                        <p class="section-subtitle">Asigna monitores a los estudiantes que han solicitado apoyo. Al asignar, la solicitud pasará al registro general.</p>
+                    </div>
+                </div>
+
+                {% with messages = get_flashed_messages(with_categories=true) %}
+                    {% if messages %}
+                        {% for category, message in messages %}
+                            <div style="padding: 10px; margin-bottom: 15px; border-radius: 5px; background: {% if category == 'error' %}rgba(255,107,107,0.2){% else %}rgba(51,217,178,0.2){% endif %}; color: #fff; margin-top: 15px;">
+                                {{ message }}
+                            </div>
+                        {% endfor %}
+                    {% endif %}
+                {% endwith %}
+
+                <!-- TABLA 1: SOLICITUDES PENDIENTES DE ASIGNAR -->
+                <h3 style="margin-top: 25px; font-size: 1.1rem; color: #00d2ff; border-bottom: 1px solid #223447; padding-bottom: 8px;">Estudiantes Pendientes de Asignación</h3>
+                
+                <div class="table-scroll" style="margin-top: 15px;">
+                    <table class="data-table">
+                        <thead>
+                            <tr>
+                                <th scope="col">Estudiante</th>
+                                <th scope="col">Materia / Apoyo</th>
+                                <th scope="col">Fecha y Horario</th>
+                                <th scope="col">Asignar Monitor</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for s in solicitudes_pendientes %}
+                            <tr>
+                                <td>
+                                    <strong>{{ s.estudiante }}</strong>
+                                    {% if s.detalle %}
+                                        <br><small style="color: #a0aec0;">Nota: {{ s.detalle }}</small>
+                                    {% endif %}
+                                </td>
+                                <td>
+                                    <strong>{{ s.materia }}</strong>
+                                    <br><small style="color: #a0aec0;">{{ s.tipo_apoyo }}</small>
+                                </td>
+                                <td>
+                                    {{ s.fecha_preferida }} ({{ s.horario }})
+                                    <br><small style="color: #a0aec0;">{{ s.modalidad }}</small>
+                                </td>
+                                <td>
+                                    <form action="{{ url_for('asignar_monitor_docente', id_solicitud=s.id_solicitud) }}" method="POST" style="display: flex; gap: 6px; align-items: center;">
+                                        <select name="id_monitor" class="filter-select" style="padding: 4px 8px; font-size: 0.85rem;" required>
+                                            <option value="">-- Seleccionar Monitor --</option>
+                                            {% for m in monitores_disponibles %}
+                                                <option value="{{ m.id_usuario }}">{{ m.nombre_monitor }}</option>
+                                            {% endfor %}
+                                        </select>
+                                        <button type="submit" class="btn-primary" style="padding: 5px 12px; font-size: 0.85rem;">Asignar</button>
+                                    </form>
+                                </td>
+                            </tr>
+                            {% else %}
+                            <tr>
+                                <td colspan="4" class="table-empty">No hay solicitudes pendientes por asignar.</td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+
+                <!-- TABLA 2: REGISTRO GENERAL DE MONITORÍAS ASIGNADAS -->
+                <h3 style="margin-top: 40px; font-size: 1.1rem; color: #33d9b2; border-bottom: 1px solid #223447; padding-bottom: 8px;">Registro General de Monitorías Asignadas</h3>
+                
+                <div class="table-scroll" style="margin-top: 15px;">
+                    <table class="data-table">
+                        <thead>
+                            <tr>
+                                <th scope="col">Estudiante</th>
+                                <th scope="col">Materia</th>
+                                <th scope="col">Monitor Asignado</th>
+                                <th scope="col">Modalidad / Horario</th>
+                                <th scope="col">Estado</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for r in monitorias_asignadas %}
+                            <tr>
+                                <td><strong>{{ r.estudiante }}</strong></td>
+                                <td>{{ r.materia }}</td>
+                                <td><span style="color: #33d9b2; font-weight: 600;">{{ r.monitor or 'Sin asignar' }}</span></td>
+                                <td>{{ r.modalidad }} <br><small style="color: #a0aec0;">{{ r.fecha_preferida }}</small></td>
+                                <td>
+                                    <span style="padding: 4px 8px; border-radius: 4px; font-size: 0.85rem; font-weight: 600; background: {% if r.estado == 'Completada' or r.estado == 'Aprobada' %}rgba(51,217,178,0.2){% elif r.estado == 'Rechazada' %}rgba(255,107,107,0.2){% else %}rgba(255,165,0,0.2){% endif %}; color: {% if r.estado == 'Completada' or r.estado == 'Aprobada' %}#33d9b2{% elif r.estado == 'Rechazada' %}#ff6b6b{% else %}#ffa500{% endif %};">
+                                        {{ r.estado }}
+                                    </span>
+                                </td>
+                            </tr>
+                            {% else %}
+                            <tr>
+                                <td colspan="5" class="table-empty">Aún no hay monitorías asignadas en el registro general.</td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+
+            </section>
+        </main>
+
+    </div>
+</body>
+</html>

@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Solicitar Monitoría - Monitorías Académicas</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/estilo.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/secciones.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/extras.css') }}">
+</head>
+<body>
+
+    <header>
+        <div class="brand-container">
+            <div class="brand-logo">
+                <img src="{{ url_for('static', filename='Logo_Monitorias.png') }}" alt="Logo Monitorías Académicas">
+            </div>
+            <div class="brand-title">
+                <h1>Monitorías</h1>
+                <p>Académicas</p>
+            </div>
+        </div>
+
+        <a class="user-profile" href="{{ url_for('pages', page='perfil/perfil_estudiante.html') }}" aria-label="Ver mi perfil">
+            <div class="user-avatar" aria-hidden="true">
+                <svg viewBox="0 0 24 24" width="26" height="26" fill="#1a2735" aria-hidden="true"><circle cx="12" cy="8" r="4.5"/><path d="M3 22c0-5 4-8 9-8s9 3 9 8z"/></svg>
+            </div>
+            <div class="user-info">
+                <h2>{{ usuario }}</h2>
+                <p>Estudiante</p>
+            </div>
+        </a>
+    </header>
+
+    <div class="main-layout main-layout--two">
+
+        <nav class="sidebar" aria-label="Navegación principal">
+            <a class="nav-btn inactive" href="{{ url_for('pages', page='estudiante/estudiante.html') }}">Información General</a>
+            <a class="nav-btn active" href="{{ url_for('pages', page='estudiante/estudiante_solicitar.html') }}" aria-current="page">Solicitar Monitoría</a>
+            <a class="nav-btn inactive" href="{{ url_for('pages', page='estudiante/estudiante_mis_monitorias.html') }}">Mis Monitorías</a>
+            <a class="nav-btn inactive" href="{{ url_for('pages', page='estudiante/estudiante_chat.html') }}">Mensajería</a>
+            <form action="{{ url_for('logout') }}" method="POST" style="display: inline;">
+                <button type="submit" class="nav-btn inactive logout" style="width: 100%; text-align: left; border: none; background: none; cursor: pointer;">Cerrar Sesión</button>
+            </form>
+        </nav>
+
+        <main class="central-panel section-panel">
+            <section>
+                <div class="panel-header">
+                    <div>
+                        <h2>Solicitar Nueva Monitoría</h2>
+                        <p class="section-subtitle">Completa el formulario para solicitar apoyo académico con un docente de tu facultad.</p>
+                    </div>
+                </div>
+
+                {% with messages = get_flashed_messages(with_categories=true) %}
+                    {% if messages %}
+                        {% for category, message in messages %}
+                            <div style="padding: 12px 16px; margin-bottom: 20px; border-radius: 8px; background: {% if category == 'error' %}rgba(239, 68, 68, 0.2){% else %}rgba(34, 197, 94, 0.2){% endif %}; border: 1px solid {% if category == 'error' %}#ef4444{% else %}#22c55e{% endif %}; color: #fff;">
+                                {{ message }}
+                            </div>
+                        {% endfor %}
+                    {% endif %}
+                {% endwith %}
+
+                <form action="{{ url_for('crear_solicitud_estudiante') }}" method="POST">
+                    <div class="form-grid-layout">
+
+                        <div class="form-group">
+                            <label for="materia">Materia o Asignatura</label>
+                            <input type="text" id="materia" name="materia" class="form-control-custom" placeholder="Ej. Cálculo Diferencial" required>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="tipo_apoyo">Tipo de Apoyo</label>
+                            <select id="tipo_apoyo" name="tipo_apoyo" class="form-control-custom" required>
+                                <option value="" disabled selected>Selecciona el tipo de apoyo</option>
+                                <option value="Refuerzo Académico">Refuerzo Académico</option>
+                                <option value="Preparación para Parciales">Preparación para Parciales</option>
+                                <option value="Resolución de Dudas">Resolución de Dudas</option>
+                                <option value="Talleres y Prácticas">Talleres y Prácticas</option>
+                            </select>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="id_docente">Docente Asignado</label>
+                            <select id="id_docente" name="id_docente" class="form-control-custom" required>
+                                <option value="" disabled selected>Selecciona un docente de tu facultad</option>
+                                {% for doc in docentes %}
+                                    <option value="{{ doc.id_usuario }}">{{ doc.nombres }} {{ doc.apellidos }} ({{ doc.departamento }})</option>
+                                {% endfor %}
+                            </select>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="fecha_preferida">Fecha Preferida</label>
+                            <input type="date" id="fecha_preferida" name="fecha_preferida" class="form-control-custom" required>
+                        </div>
+
+                        <!-- Horario convertido en lista desplegable estandarizada -->
+                        <div class="form-group">
+                            <label for="horario">Horario Preferido</label>
+                            <select id="horario" name="horario" class="form-control-custom" required>
+                                <option value="" disabled selected>Selecciona un bloque de horario</option>
+                                <option value="08:00 AM - 10:00 AM">08:00 AM - 10:00 AM</option>
+                                <option value="10:00 AM - 12:00 PM">10:00 AM - 12:00 PM</option>
+                                <option value="02:00 PM - 04:00 PM">02:00 PM - 04:00 PM</option>
+                                <option value="04:00 PM - 06:00 PM">04:00 PM - 06:00 PM</option>
+                                <option value="06:00 PM - 08:00 PM">06:00 PM - 08:00 PM</option>
+                            </select>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="modalidad">Modalidad</label>
+                            <select id="modalidad" name="modalidad" class="form-control-custom" required>
+                                <option value="Presencial">Presencial</option>
+                                <option value="Virtual">Virtual</option>
+                            </select>
+                        </div>
+
+                        <div class="form-group full-width">
+                            <label for="detalle">Detalle o Motivo Específico</label>
+                            <textarea id="detalle" name="detalle" rows="3" class="form-control-custom" placeholder="Describe brevemente los temas o dudas que deseas tratar..."></textarea>
+                        </div>
+
+                        <!-- Botones de Acción -->
+                        <div class="form-group full-width" style="flex-direction: row; justify-content: flex-end; gap: 12px; margin-top: 15px;">
+                            <a href="{{ url_for('pages', page='estudiante/estudiante_mis_monitorias.html') }}" style="padding: 10px 22px; text-decoration: none; border-radius: 8px; color: #94a3b8; background: #1e293b; border: 1px solid #334155; font-size: 0.95rem; font-weight: 600; display: inline-flex; align-items: center;">
+                                Cancelar
+                            </a>
+                            <button type="submit" style="padding: 10px 24px; border-radius: 8px; background: #14b8a6; color: #ffffff; border: none; font-size: 0.95rem; font-weight: 700; cursor: pointer; transition: background 0.2s;">
+                                Enviar Solicitud
+                            </button>
+                        </div>
+
+                    </div>
+                </form>
+            </section>
+        </main>
+
+    </div>
+</body>
+</html>

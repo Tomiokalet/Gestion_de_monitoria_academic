@@ -1,0 +1,210 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Registrar Nuevo Usuario - Administrador</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/estilo.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/admin.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/secciones.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/extras.css') }}">
+</head>
+<body>
+
+    <header>
+        <div class="brand-container">
+            <div class="brand-logo">
+                <img src="{{ url_for('static', filename='Logo_Monitorias.png') }}" alt="Logo Monitorías Académicas">
+            </div>
+            <div class="brand-title">
+                <h1>Monitorías</h1>
+                <p>Académicas</p>
+            </div>
+        </div>
+
+        <a class="user-profile" href="{{ url_for('pages', page='perfil/perfil_admin.html') }}" aria-label="Ver mi perfil">
+            <div class="user-avatar" aria-hidden="true">
+                <svg viewBox="0 0 24 24" width="26" height="26" fill="#1a2735" aria-hidden="true"><circle cx="12" cy="8" r="4.5"/><path d="M3 22c0-5 4-8 9-8s9 3 9 8z"/></svg>
+            </div>
+            <div class="user-info">
+                <h2>{{ usuario }}</h2>
+                <p>Super Administrador</p>
+            </div>
+        </a>
+    </header>
+
+    <div class="main-layout main-layout--two">
+
+        <nav class="sidebar" aria-label="Navegación principal">
+            <a class="nav-btn inactive" href="{{ url_for('pages', page='admin/admin.html') }}">Información General</a>
+            <a class="nav-btn active" href="{{ url_for('pages', page='admin/admin_usuarios.html') }}" aria-current="page">Gestión Usuarios</a>
+            <a class="nav-btn inactive" href="{{ url_for('pages', page='admin/admin_monitorias.html') }}">Gestión Monitorías</a>
+            <a class="nav-btn inactive" href="{{ url_for('pages', page='admin/admin_asignaciones.html') }}">Asignaciones</a>
+            <a class="nav-btn inactive" href="{{ url_for('pages', page='admin/admin_reportes.html') }}">Reportes y Alertas</a>
+            <form action="{{ url_for('logout') }}" method="POST" style="display: inline;">
+                <button type="submit" class="nav-btn inactive logout" style="width: 100%; text-align: left; border: none; background: none; cursor: pointer;">Cerrar Sesión</button>
+            </form>
+        </nav>
+
+        <main class="central-panel section-panel">
+            <section>
+                <div class="panel-header">
+                    <div>
+                        <h2>Registrar Nuevo Usuario</h2>
+                        <p class="section-subtitle">Completa los datos para dar de alta un Estudiante o Docente en el sistema.</p>
+                    </div>
+                </div>
+
+                {% with messages = get_flashed_messages(with_categories=true) %}
+                    {% if messages %}
+                        {% for category, message in messages %}
+                            <div style="padding: 12px 16px; margin-bottom: 20px; border-radius: 8px; background: {% if category == 'error' %}rgba(239, 68, 68, 0.2){% else %}rgba(34, 197, 94, 0.2){% endif %}; border: 1px solid {% if category == 'error' %}#ef4444{% else %}#22c55e{% endif %}; color: #fff;">
+                                {{ message }}
+                            </div>
+                        {% endfor %}
+                    {% endif %}
+                {% endwith %}
+
+                <form action="{{ url_for('crear_usuario_admin') }}" method="POST">
+                    <h3 style="color: #00d2ff; font-size: 1.1rem; margin-bottom: 15px; border-bottom: 1px solid rgba(255,255,255,0.1); padding-bottom: 8px;">Información Personal y de Cuenta</h3>
+                    
+                    <div class="form-grid-layout" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 15px; margin-bottom: 20px;">
+
+                        <div class="form-group">
+                            <label for="documento">Documento de Identidad</label>
+                            <input type="text" id="documento" name="documento" class="form-control-custom" placeholder="Ej. 1002345678" required style="width: 100%; padding: 10px; border-radius: 6px; border: 1px solid #223447; background: #111c24; color: #fff;">
+                        </div>
+
+                        <div class="form-group">
+                            <label for="rol">Rol Principal</label>
+                            <select id="rol" name="rol" class="form-control-custom" required style="width: 100%; padding: 10px; border-radius: 6px; border: 1px solid #223447; background: #111c24; color: #fff;" onchange="toggleCamposRol()">
+                                <option value="" disabled selected>Selecciona un rol</option>
+                                <option value="Estudiante">Estudiante</option>
+                                <option value="Profesor">Profesor / Docente</option>
+                            </select>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="nombres">Nombres</label>
+                            <input type="text" id="nombres" name="nombres" class="form-control-custom" placeholder="Ej. Carlos Andrés" required style="width: 100%; padding: 10px; border-radius: 6px; border: 1px solid #223447; background: #111c24; color: #fff;">
+                        </div>
+
+                        <div class="form-group">
+                            <label for="apellidos">Apellidos</label>
+                            <input type="text" id="apellidos" name="apellidos" class="form-control-custom" placeholder="Ej. Pérez Gómez" required style="width: 100%; padding: 10px; border-radius: 6px; border: 1px solid #223447; background: #111c24; color: #fff;">
+                        </div>
+
+                        <div class="form-group">
+                            <label for="telefono">Teléfono</label>
+                            <input type="text" id="telefono" name="telefono" class="form-control-custom" placeholder="Ej. 3001234567" style="width: 100%; padding: 10px; border-radius: 6px; border: 1px solid #223447; background: #111c24; color: #fff;">
+                        </div>
+
+                        <div class="form-group">
+                            <label for="correo_institucional">Correo Institucional</label>
+                            <input type="email" id="correo_institucional" name="correo_institucional" class="form-control-custom" placeholder="nombre.apellido@campusucc.edu.co" required style="width: 100%; padding: 10px; border-radius: 6px; border: 1px solid #223447; background: #111c24; color: #fff;">
+                        </div>
+
+                        <div class="form-group">
+                            <label for="contrasena">Contraseña Temporal</label>
+                            <input type="password" id="contrasena" name="contrasena" class="form-control-custom" placeholder="Mínimo 8 caracteres" required style="width: 100%; padding: 10px; border-radius: 6px; border: 1px solid #223447; background: #111c24; color: #fff;">
+                        </div>
+
+                    </div>
+
+                    <!-- Sección dinámica para Estudiante -->
+                    <div id="seccion-estudiante" style="display: none;">
+                        <h3 style="color: #00d2ff; font-size: 1.1rem; margin: 25px 0 15px 0; border-bottom: 1px solid rgba(255,255,255,0.1); padding-bottom: 8px;">Información Académica (Estudiante)</h3>
+                        <div class="form-grid-layout" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 15px; margin-bottom: 25px;">
+                            <div class="form-group">
+                                <label for="programa_academico">Programa Académico</label>
+                                <select id="programa_academico" name="programa_academico" class="form-control-custom" style="width: 100%; padding: 10px; border-radius: 6px; border: 1px solid #223447; background: #111c24; color: #fff;">
+                                    <option value="Ingeniería de Sistemas">Ingeniería de Sistemas</option>
+                                    <option value="Ingeniería Civil">Ingeniería Civil</option>
+                                    <option value="Derecho">Derecho</option>
+                                    <option value="Contaduría Pública">Contaduría Pública</option>
+                                    <option value="Psicología">Psicología</option>
+                                    <option value="Enfermería">Enfermería</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Sección dinámica para Docente -->
+                    <div id="seccion-docente" style="display: none;">
+                        <h3 style="color: #00d2ff; font-size: 1.1rem; margin: 25px 0 15px 0; border-bottom: 1px solid rgba(255,255,255,0.1); padding-bottom: 8px;">Información Institucional (Docente)</h3>
+                        <div class="form-grid-layout" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 15px; margin-bottom: 25px;">
+                            
+                            <div class="form-group">
+                                <label for="facultad">Facultad</label>
+                                <select id="facultad" name="facultad" class="form-control-custom" style="width: 100%; padding: 10px; border-radius: 6px; border: 1px solid #223447; background: #111c24; color: #fff;">
+                                    <option value="Facultad de Ingeniería">Facultad de Ingeniería</option>
+                                    <option value="Facultad de Derecho">Facultad de Derecho</option>
+                                    <option value="Facultad de Ciencias Económicas y Administrativas">Facultad de Ciencias Económicas y Administrativas</option>
+                                    <option value="Facultad de Psicología">Facultad de Psicología</option>
+                                    <option value="Facultad de Ciencias de la Salud">Facultad de Ciencias de la Salud</option>
+                                    <option value="Bienestar Universitario">Bienestar Universitario</option>
+                                </select>
+                            </div>
+
+                            <div class="form-group">
+                                <label for="departamento">Departamento</label>
+                                <input type="text" id="departamento" name="departamento" class="form-control-custom" placeholder="Ej. Departamento General / Constitución" style="width: 100%; padding: 10px; border-radius: 6px; border: 1px solid #223447; background: #111c24; color: #fff;">
+                            </div>
+
+                            <div class="form-group">
+                                <label for="oficina">Oficina (Opcional)</label>
+                                <input type="text" id="oficina" name="oficina" class="form-control-custom" placeholder="Ej. Bloque 3 - oficina 312" style="width: 100%; padding: 10px; border-radius: 6px; border: 1px solid #223447; background: #111c24; color: #fff;">
+                            </div>
+
+                            <div class="form-group">
+                                <label for="categoria_docente">Categoría Docente</label>
+                                <select id="categoria_docente" name="categoria_docente" class="form-control-custom" style="width: 100%; padding: 10px; border-radius: 6px; border: 1px solid #223447; background: #111c24; color: #fff;">
+                                    <option value="Planta">Planta</option>
+                                    <option value="Cátedra">Cátedra</option>
+                                    <option value="Administrativo">Administrativo</option>
+                                </select>
+                            </div>
+
+                        </div>
+                    </div>
+
+                    <!-- Botones de Acción -->
+                    <div style="display: flex; justify-content: flex-end; gap: 12px; margin-top: 20px;">
+                        <a href="{{ url_for('pages', page='admin/admin_usuarios.html') }}" style="padding: 10px 22px; text-decoration: none; border-radius: 8px; color: #94a3b8; background: #1e293b; border: 1px solid #334155; font-size: 0.95rem; font-weight: 600; display: inline-flex; align-items: center;">
+                            Cancelar
+                        </a>
+                        <button type="submit" style="padding: 10px 24px; border-radius: 8px; background: #14b8a6; color: #ffffff; border: none; font-size: 0.95rem; font-weight: 700; cursor: pointer; transition: background 0.2s;">
+                            Guardar Usuario
+                        </button>
+                    </div>
+
+                </form>
+            </section>
+        </main>
+    </div>
+
+    <script>
+        function toggleCamposRol() {
+            const rolSelect = document.getElementById('rol');
+            const seccionEstudiante = document.getElementById('seccion-estudiante');
+            const seccionDocente = document.getElementById('seccion-docente');
+
+            const valorRol = rolSelect.value;
+
+            seccionEstudiante.style.display = 'none';
+            seccionDocente.style.display = 'none';
+
+            if (valorRol === 'Estudiante') {
+                seccionEstudiante.style.display = 'block';
+            } else if (valorRol === 'Profesor') {
+                seccionDocente.style.display = 'block';
+            }
+        }
+
+        document.addEventListener('DOMContentLoaded', toggleCamposRol);
+    </script>
+</body>
+</html>

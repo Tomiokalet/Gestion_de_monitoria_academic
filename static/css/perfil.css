@@ -1,0 +1,109 @@
+/* ===== Estilos del perfil ===== */
+body {
+    display: block;
+}
+
+.profile-container {
+    max-width: 800px;
+    margin: 20px auto;
+    background-color: var(--bg-card);
+    padding: 30px;
+    border-radius: 16px;
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);
+}
+
+.profile-header {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+    border-bottom: 2px solid var(--btn-active);
+    padding-bottom: 20px;
+    margin-bottom: 20px;
+}
+
+.profile-avatar-large {
+    width: 80px;
+    height: 80px;
+    flex-shrink: 0;
+    background-color: var(--btn-active);
+    border: 3px solid var(--avatar-border);
+    border-radius: 50%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 30px;
+    font-weight: 800;
+    color: var(--text-dark);
+}
+
+.profile-role {
+    color: var(--btn-active);
+    font-size: 14px;
+    margin-top: 4px;
+}
+
+.profile-section-title {
+    margin-bottom: 15px;
+    font-size: 16px;
+}
+
+.profile-details-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 15px;
+}
+
+.detail-item {
+    background-color: var(--bg-main);
+    padding: 12px 15px;
+    border-radius: 8px;
+    border-left: 4px solid var(--btn-active);
+}
+
+.detail-item span {
+    display: block;
+    font-size: 11px;
+    color: var(--btn-active);
+    margin-bottom: 4px;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.detail-item p {
+    font-size: 14px;
+    color: var(--text-main);
+    font-weight: 700;
+    overflow-wrap: anywhere;
+}
+
+.back-btn {
+    display: inline-block;
+    margin-top: 25px;
+    padding: 10px 20px;
+    background-color: var(--btn-active);
+    color: var(--text-dark);
+    text-decoration: none;
+    border-radius: 12px;
+    font-weight: 700;
+    font-size: 13px;
+    transition: opacity 0.2s;
+}
+
+.back-btn:hover {
+    opacity: 0.85;
+}
+
+.back-btn:focus-visible {
+    outline: 3px solid var(--avatar-border);
+    outline-offset: 2px;
+}
+
+@media (max-width: 600px) {
+    .profile-container {
+        padding: 20px;
+    }
+
+    .profile-details-grid {
+        grid-template-columns: 1fr;
+    }
+}

@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Historial y Monitorías Asignadas - Monitor</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/estilo.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/admin.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/secciones.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/extras.css') }}">
+</head>
+<body>
+
+    <header>
+        <div class="brand-container">
+            <div class="brand-logo">
+                <img src="{{ url_for('static', filename='Logo_Monitorias.png') }}" alt="Logo Monitorías Académicas">
+            </div>
+            <div class="brand-title">
+                <h1>Monitorías</h1>
+                <p>Académicas</p>
+            </div>
+        </div>
+
+        <a class="user-profile" href="{{ url_for('pages', page='perfil/perfil.html') }}" aria-label="Ver mi perfil">
+            <div class="user-avatar" aria-hidden="true">
+                <svg viewBox="0 0 24 24" width="26" height="26" fill="#1a2735" aria-hidden="true"><circle cx="12" cy="8" r="4.5"/><path d="M3 22c0-5 4-8 9-8s9 3 9 8z"/></svg>
+            </div>
+            <div class="user-info">
+                <h2>{{ usuario }}</h2>
+                <p>Monitor Académico</p>
+            </div>
+        </a>
+    </header>
+
+    <div class="main-layout main-layout--two">
+
+        <nav class="sidebar" aria-label="Navegación principal">
+            <a class="nav-btn inactive" href="{{ url_for('pages', page='monitor/monitor.html') }}">Panel Principal</a>
+            <a class="nav-btn inactive" href="{{ url_for('pages', page='monitor/monitor_asignaciones.html') }}">Asignaciones</a>
+            <a class="nav-btn active" href="{{ url_for('pages', page='monitor/monitor_historial.html') }}" aria-current="page">Historial y Monitorías</a>
+            <a class="nav-btn inactive" href="{{ url_for('pages', page='monitor/monitor_sesiones.html') }}">Registro Sesiones</a>
+            <a class="nav-btn inactive" href="{{ url_for('pages', page='monitor/monitor_chat.html') }}">Mensajería</a>
+            <form action="{{ url_for('logout') }}" method="POST" style="display: inline;">
+                <button type="submit" class="nav-btn inactive logout" style="width: 100%; text-align: left; border: none; background: none; cursor: pointer;">Cerrar Sesión</button>
+            </form>
+        </nav>
+
+        <main class="central-panel section-panel">
+            <section>
+                <div class="panel-header">
+                    <div>
+                        <h2>Gestión de Monitorías Asignadas</h2>
+                        <p class="section-subtitle">Consulta las monitorías que te han asignado los docentes y actualiza su estado al realizarlas o cancelarlas.</p>
+                    </div>
+                </div>
+
+                {% with messages = get_flashed_messages(with_categories=true) %}
+                    {% if messages %}
+                        {% for category, message in messages %}
+                            <div style="padding: 10px; margin-bottom: 15px; border-radius: 5px; background: {% if category == 'error' %}rgba(255,107,107,0.2){% else %}rgba(51,217,178,0.2){% endif %}; color: #fff; margin-top: 15px;">
+                                {{ message }}
+                            </div>
+                        {% endfor %}
+                    {% endif %}
+                {% endwith %}
+
+                <!-- TABLA 1: MONITORÍAS ASIGNADAS (PENDIENTES POR IMPARTIR) -->
+                <h3 style="margin-top: 25px; font-size: 1.1rem; color: #00d2ff; border-bottom: 1px solid #223447; padding-bottom: 8px;">Monitorías Asignadas (Pendientes por Realizar)</h3>
+                
+                <div class="table-scroll" style="margin-top: 15px;">
+                    <table class="data-table">
+                        <thead>
+                            <tr>
+                                <th scope="col">Estudiante</th>
+                                <th scope="col">Materia / Docente</th>
+                                <th scope="col">Horario / Modalidad</th>
+                                <th scope="col">Actualizar Estado</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for p in monitorias_pendientes %}
+                            <tr>
+                                <td>
+                                    <strong>{{ p.estudiante }}</strong>
+                                    {% if p.detalle %}
+                                        <br><small style="color: #a0aec0;">Nota: {{ p.detalle }}</small>
+                                    {% endif %}
+                                </td>
+                                <td>
+                                    <strong>{{ p.materia }}</strong>
+                                    <br><small style="color: #a0aec0;">Prof. {{ p.docente }}</small>
+                                </td>
+                                <td>
+                                    {{ p.fecha_preferida }} ({{ p.horario }})
+                                    <br><small style="color: #a0aec0;">{{ p.modalidad }}</small>
+                                </td>
+                                <td>
+                                    <form action="{{ url_for('actualizar_monitoria_monitor', id_solicitud=p.id_solicitud) }}" method="POST" style="display: flex; gap: 6px; align-items: center;">
+                                        <select name="estado" class="filter-select" style="padding: 4px 6px; font-size: 0.85rem;" required>
+                                            <option value="Aprobada" selected>Asignada</option>
+                                            <option value="Completada">Completada (Realizada)</option>
+                                            <option value="Cancelada">Cancelada</option>
+                                        </select>
+                                        <button type="submit" class="btn-primary" style="padding: 4px 10px; font-size: 0.85rem;">Guardar</button>
+                                    </form>
+                                </td>
+                            </tr>
+                            {% else %}
+                            <tr>
+                                <td colspan="4" class="table-empty">No tienes monitorías pendientes por impartir en este momento.</td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+
+                <!-- TABLA 2: HISTORIAL GENERAL (COMPLETADAS / CANCELADAS) -->
+                <h3 style="margin-top: 40px; font-size: 1.1rem; color: #33d9b2; border-bottom: 1px solid #223447; padding-bottom: 8px;">Historial de Monitorías (Completadas / Canceladas)</h3>
+                
+                <div class="table-scroll" style="margin-top: 15px;">
+                    <table class="data-table">
+                        <thead>
+                            <tr>
+                                <th scope="col">Estudiante</th>
+                                <th scope="col">Materia</th>
+                                <th scope="col">Docente</th>
+                                <th scope="col">Fecha / Modalidad</th>
+                                <th scope="col">Estado Final</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for h in monitorias_historial %}
+                            <tr>
+                                <td><strong>{{ h.estudiante }}</strong></td>
+                                <td>{{ h.materia }}</td>
+                                <td>{{ h.docente }}</td>
+                                <td>{{ h.fecha_preferida }} <br><small style="color: #a0aec0;">{{ h.modalidad }}</small></td>
+                                <td>
+                                    <span style="padding: 4px 8px; border-radius: 4px; font-size: 0.85rem; font-weight: 600; background: {% if h.estado == 'Completada' %}rgba(51,217,178,0.2){% else %}rgba(255,107,107,0.2){% endif %}; color: {% if h.estado == 'Completada' %}#33d9b2{% else %}#ff6b6b{% endif %};">
+                                        {{ h.estado }}
+                                    </span>
+                                </td>
+                            </tr>
+                            {% else %}
+                            <tr>
+                                <td colspan="5" class="table-empty">Aún no hay registros en tu historial de monitorías finalizadas.</td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+
+            </section>
+        </main>
+
+    </div>
+</body>
+</html>

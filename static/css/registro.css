@@ -1,0 +1,233 @@
+/* ===== Panel de Registro de Monitoría ===== */
+
+.data-table tbody tr[data-id] {
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+}
+
+.data-table tbody tr[data-id]:hover {
+  background-color: rgba(26, 188, 156, 0.08);
+}
+
+.student-link {
+  padding: 0;
+  border: none;
+  background: none;
+  color: var(--btn-active, #1abc9c);
+  font-size: inherit;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.student-link:hover {
+  text-decoration: underline;
+}
+
+.table-hint {
+  margin-bottom: 12px;
+  font-size: 12px;
+  color: var(--text-muted, #bdc3c7);
+}
+
+/* Panel Desplegable (HTML5 Dialog) */
+.panel-registro {
+  width: min(580px, 100%);
+  max-width: 100%;
+  height: 100vh;
+  max-height: 100vh;
+  margin: 0 0 0 auto;
+  padding: 0;
+  border: none;
+  background-color: var(--bg-card, #34495e);
+  color: var(--text-main, #ffffff);
+  box-shadow: -12px 0 30px rgba(0, 0, 0, 0.45);
+}
+
+.panel-registro[open] {
+  display: flex;
+  flex-direction: column;
+  animation: registro-entrada 0.25s ease-out;
+}
+
+.panel-registro::backdrop {
+  background-color: rgba(0, 0, 0, 0.65);
+}
+
+@keyframes registro-entrada {
+  from { transform: translateX(50px); opacity: 0; }
+  to { transform: translateX(0); opacity: 1; }
+}
+
+.registro-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 15px;
+  padding: 22px 25px 16px;
+  border-bottom: 2px solid var(--btn-active, #1abc9c);
+  background-color: var(--bg-main, #2c3e50);
+}
+
+.registro-eyebrow {
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+  color: var(--btn-active, #1abc9c);
+}
+
+.registro-header h2 {
+  margin-top: 4px;
+  font-size: 20px;
+  font-weight: 800;
+}
+
+.registro-meta {
+  margin-top: 4px;
+  font-size: 12px;
+  color: var(--text-muted, #bdc3c7);
+}
+
+.registro-cerrar {
+  border: none;
+  background: none;
+  color: var(--text-muted, #bdc3c7);
+  font-size: 28px;
+  line-height: 1;
+  cursor: pointer;
+  transition: color 0.2s ease;
+}
+
+.registro-cerrar:hover {
+  color: #e74c3c;
+}
+
+.registro-body {
+  flex: 1;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 22px;
+  padding: 20px 25px 30px;
+}
+
+.registro-kpis .kpi-card {
+  padding: 12px 8px;
+  text-align: center;
+  background-color: var(--bg-main, #2c3e50);
+  border-radius: 6px;
+}
+
+.registro-kpis .kpi-value {
+  font-size: 20px;
+  font-weight: bold;
+  color: var(--btn-active, #1abc9c);
+}
+
+.registro-subtitulo {
+  font-size: 15px;
+  font-weight: 700;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+  padding-bottom: 8px;
+}
+
+/* Campos de Formulario dentro del Panel */
+.panel-registro .form-field input[type="text"],
+.panel-registro .form-field input[type="number"],
+.panel-registro .form-field input[type="date"],
+.panel-registro .form-field select,
+.panel-registro .form-field textarea {
+  width: 100%;
+  padding: 10px 12px;
+  border: 1px solid var(--border-color, #4e6d8c);
+  border-radius: 6px;
+  background-color: #2b3e50;
+  color: #ffffff;
+  font-size: 13px;
+  outline: none;
+}
+
+.panel-registro .form-field input:focus,
+.panel-registro .form-field select:focus,
+.panel-registro .form-field textarea:focus {
+  border-color: var(--btn-active, #1abc9c);
+}
+
+.registro-acciones {
+  grid-column: 1 / -1;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-top: 10px;
+}
+
+.btn-ghost {
+  padding: 10px 18px;
+  border: 1px solid var(--text-muted, #7f8c8d);
+  border-radius: 6px;
+  background: none;
+  color: #ffffff;
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+}
+
+.btn-ghost:hover {
+  background-color: rgba(255, 255, 255, 0.1);
+}
+
+/* Historial de Sesiones Registradas */
+.registro-lista {
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.registro-item {
+  padding: 12px 15px;
+  background-color: var(--bg-main, #2c3e50);
+  border-left: 4px solid var(--btn-active, #1abc9c);
+  border-radius: 6px;
+  font-size: 13px;
+}
+
+.registro-item-top {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 6px;
+}
+
+.registro-tema {
+  font-weight: 700;
+  color: #ffffff;
+}
+
+.registro-detalle {
+  margin-top: 4px;
+  font-size: 11px;
+  color: var(--text-muted, #bdc3c7);
+}
+
+.registro-obs {
+  margin-top: 8px;
+  font-size: 12px;
+  line-height: 1.4;
+  color: #ecf0f1;
+}
+
+.registro-borrar {
+  margin-top: 10px;
+  padding: 0;
+  border: none;
+  background: none;
+  color: #e74c3c;
+  font-size: 11px;
+  cursor: pointer;
+}
+
+.registro-borrar:hover {
+  text-decoration: underline;
+}

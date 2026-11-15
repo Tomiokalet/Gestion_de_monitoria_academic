@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login - Monitorías Académicas</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/estudiante.css') }}">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/estilo.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/login.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/extras.css') }}">
+</head>
+<body class="login-page">
+    <main class="login-card">
+        <div class="login-top">
+            <div class="brand-container">
+                <div class="brand-logo">
+                    <img src="{{ url_for('static', filename='Logo_Monitorias.png') }}" alt="Logo Monitorías Académicas">
+                </div>
+                <div class="brand-title">
+                    <h1>Monitorías</h1>
+                    <p>Académicas</p>
+                </div>
+            </div>
+            <div class="ucc-badge" aria-label="Universidad Cooperativa de Colombia">
+                <strong>UCC</strong>
+                <span>Universidad Cooperativa de Colombia</span>
+            </div>
+        </div>
+
+        <form id="login-form" method="post" action="{{ url_for('login') }}">
+            <div class="form-group">
+                <label for="usuario">Usuario</label>
+                <input type="text" id="usuario" name="usuario" autocomplete="username" placeholder="Documento o correo institucional" required>
+            </div>
+            <div class="form-group">
+                <label for="contrasena">Contraseña</label>
+                <input type="password" id="contrasena" name="contrasena" autocomplete="current-password" required>
+            </div>
+
+            {% with mensajes = get_flashed_messages(with_categories=true) %}
+                {% for categoria, mensaje in mensajes %}
+                    <p class="form-error" role="alert" style="margin-bottom: 15px; padding: 8px 12px; border-radius: 6px; background: {% if categoria == 'error' %}rgba(239, 68, 68, 0.2){% else %}rgba(34, 197, 94, 0.2){% endif %}; color: #fff;">{{ mensaje }}</p>
+                {% endfor %}
+            {% endwith %}
+
+            <!-- Enlace conectado directamente a la ruta de recuperación -->
+            <a class="forgot-link" id="olvide" href="{{ url_for('recuperar_password') }}">Olvidé mi contraseña</a>
+            <button type="submit" class="btn-login">Ingresar</button>
+        </form>
+    </main>
+
+</body>
+</html>

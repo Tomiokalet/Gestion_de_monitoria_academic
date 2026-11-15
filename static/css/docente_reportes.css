@@ -1,0 +1,35 @@
+/* ===== Estilos para la vista de Reportes de Sesiones ===== */
+
+.btn-exportar {
+    background-color: var(--btn-active, #1abc9c);
+    color: white;
+    border: none;
+    padding: 10px 16px;
+    border-radius: 8px;
+    font-weight: bold;
+    font-size: 13px;
+    cursor: pointer;
+    transition: opacity 0.2s ease;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+}
+
+.btn-exportar:hover {
+    opacity: 0.85;
+}
+
+.table-hint {
+    margin-bottom: 12px;
+    font-size: 12px;
+    color: var(--text-muted, #bdc3c7);
+}
+
+/* Transición suave en las filas de la tabla de reportes */
+.data-table tbody tr {
+    transition: background-color 0.2s ease;
+}
+
+.data-table tbody tr:hover {
+    background-color: rgba(26, 188, 156, 0.05);
+}

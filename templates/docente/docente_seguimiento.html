@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Seguimiento - Docente</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/estilo.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/admin.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/secciones.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/extras.css') }}">
+</head>
+<body>
+    <header>
+        <div class="brand-container"><div class="brand-title"><h1>Monitorías</h1><p>Académicas</p></div></div>
+        <a class="user-profile" href="{{ url_for('pages', page='perfil/perfil_docente.html') }}"><div class="user-info"><h2>{{ usuario }}</h2><p>Docente</p></div></a>
+    </header>
+    <div class="main-layout main-layout--two">
+        <nav class="sidebar">
+            <a class="nav-btn inactive" href="{{ url_for('pages', page='docente/docente.html') }}">Panel Principal</a>
+            <a class="nav-btn inactive" href="{{ url_for('pages', page='docente/docente_solicitudes.html') }}">Solicitudes</a>
+            <a class="nav-btn inactive" href="{{ url_for('pages', page='docente/docente_monitores.html') }}">Monitores</a>
+            <a class="nav-btn active" href="{{ url_for('pages', page='docente/docente_seguimiento.html') }}">Seguimiento</a>
+            <a class="nav-btn inactive" href="{{ url_for('pages', page='docente/docente_chat.html') }}">Mensajería</a>
+            <form action="{{ url_for('logout') }}" method="POST"><button type="submit" class="nav-btn inactive logout" style="width:100%; text-align:left; border:none; background:none; cursor:pointer;">Cerrar Sesión</button></form>
+        </nav>
+        <main class="central-panel section-panel">
+            <section>
+                <div class="panel-header"><div><h2>Seguimiento Académico</h2><p class="section-subtitle">Registra observaciones y alertas de los estudiantes.</p></div></div>
+                
+                {% with messages = get_flashed_messages(with_categories=true) %}
+                    {% if messages %}
+                        {% for category, message in messages %}
+                            <div style="padding: 10px; margin-bottom: 15px; border-radius: 5px; background: {% if category == 'error' %}rgba(255,107,107,0.2){% else %}rgba(51,217,178,0.2){% endif %}; color: #fff;">{{ message }}</div>
+                        {% endfor %}
+                    {% endif %}
+                {% endwith %}
+
+                <form method="POST" action="{{ url_for('guardar_seguimiento_docente') }}" style="max-width: 600px; margin-top: 20px; background: #15222e; padding: 20px; border-radius: 8px; border: 1px solid #223447;">
+                    <div class="form-field" style="margin-bottom: 15px;">
+                        <label style="display:block; margin-bottom:5px;">Estudiante</label>
+                        <select name="id_estudiante" required class="filter-select" style="width: 100%;">
+                            <option value="">Selecciona un estudiante</option>
+                            {% for est in estudiantes %}
+                            <option value="{{ est.id_usuario }}">{{ est.nombres }} {{ est.apellidos }} ({{ est.programa_academico }})</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                    <div class="form-field" style="margin-bottom: 15px;">
+                        <label style="display:block; margin-bottom:5px;">Momento o Corte</label>
+                        <input type="text" name="momento_o_corte" placeholder="Ej. Corte 1" required class="filter-input" style="width: 100%;">
+                    </div>
+                    <div class="form-field" style="margin-bottom: 15px;">
+                        <label style="display:block; margin-bottom:5px;">Calificación Promedio</label>
+                        <input type="number" step="0.01" name="calificacion_promedio" placeholder="Ej. 3.8" class="filter-input" style="width: 100%;">
+                    </div>
+                    <div class="form-field" style="margin-bottom: 15px;">
+                        <label style="display:block; margin-bottom:5px;">Observación Docente</label>
+                        <textarea name="observacion_docente" rows="3" required class="filter-input" style="width: 100%;"></textarea>
+                    </div>
+                    <div class="form-field" style="margin-bottom: 20px;">
+                        <label style="display:block; margin-bottom:5px;">¿Alerta Activa?</label>
+                        <select name="alerta_activa" class="filter-select" style="width: 100%;">
+                            <option value="No">No</option>
+                            <option value="Sí">Sí</option>
+                        </select>
+                    </div>
+                    <button type="submit" class="btn-primary">Guardar Seguimiento</button>
+                </form>
+
+                <div class="table-scroll" style="margin-top: 30px;">
+                    <h3 style="color:#fff; margin-bottom:15px; font-size:1.1rem;">Historial de Seguimientos Registrados</h3>
+                    <table class="data-table">
+                        <thead><tr><th>Estudiante</th><th>Corte</th><th>Promedio</th><th>Observación</th><th>Alerta</th></tr></thead>
+                        <tbody>
+                            {% for seg in seguimientos %}
+                            <tr>
+                                <td>{{ seg.estudiante }}</td>
+                                <td>{{ seg.momento_o_corte }}</td>
+                                <td>{{ seg.calificacion_promedio or 'N/A' }}</td>
+                                <td>{{ seg.observacion_docente }}</td>
+                                <td><span class="badge" style="background: {% if seg.alerta_activa == 'Sí' %}rgba(255,107,107,0.3){% else %}rgba(51,217,178,0.3){% endif %};">{{ seg.alerta_activa }}</span></td>
+                            </tr>
+                            {% else %}
+                            <tr><td colspan="5" class="table-empty">No hay seguimientos registrados.</td></tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </section>
+        </main>
+    </div>
+</body>
+</html>
