@@ -143,3 +143,192 @@ tr.fila-inactiva td:last-child { opacity: 1; }
 /* Botones de acción pequeños (docente) */
 button.btn-action-sm { display: inline-block; background-color: transparent; color: var(--btn-active); border: 1px solid var(--btn-active); padding: 5px 10px; border-radius: 6px; font-size: 11px; font-weight: 700; cursor: pointer; transition: background-color 0.2s, color 0.2s; }
 button.btn-action-sm:hover { background-color: var(--btn-active); color: var(--text-dark); }
+
+/* =========================================================
+   ESTILOS FORMULARIO SOLICITAR MONITORÍA
+   ========================================================= */
+
+.logout-form {
+    display: block;
+    width: 100%;
+}
+
+.logout-form button.logout {
+    width: 100%;
+    text-align: left;
+    border: none;
+    background: none;
+    cursor: pointer;
+    font-family: inherit;
+}
+
+/* Contenedor interno de la tarjeta del formulario */
+.form-card-container {
+    max-width: 860px;
+    margin: 0 auto;
+    background: rgba(30, 41, 59, 0.7);
+    border: 1px solid rgba(148, 163, 184, 0.15);
+    border-radius: 14px;
+    padding: 28px 32px;
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
+}
+
+.form-card-container .panel-header {
+    margin-bottom: 24px;
+    padding-bottom: 16px;
+    border-bottom: 1px solid rgba(148, 163, 184, 0.15);
+}
+
+/* Alertas Flash */
+.flash-alert {
+    padding: 12px 16px;
+    margin-bottom: 20px;
+    border-radius: 8px;
+    font-size: 0.92rem;
+    font-weight: 600;
+    color: #ffffff;
+}
+
+.flash-error {
+    background: rgba(239, 68, 68, 0.2);
+    border: 1px solid #ef4444;
+}
+
+.flash-success,
+.flash-info {
+    background: rgba(34, 197, 94, 0.2);
+    border: 1px solid #22c55e;
+}
+
+/* Cuadrícula de 2 columnas */
+.form-grid-layout {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 20px 24px;
+}
+
+.form-group {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.form-group.full-width {
+    grid-column: 1 / -1;
+}
+
+.form-group label {
+    font-size: 0.9rem;
+    font-weight: 600;
+    color: #e2e8f0;
+    letter-spacing: 0.2px;
+}
+
+/* Inputs, Selects y Textarea */
+.form-control-custom {
+    width: 100%;
+    box-sizing: border-box;
+    padding: 11px 14px;
+    border-radius: 8px;
+    border: 1px solid #334155;
+    background-color: #0f172a;
+    color: #f8fafc;
+    font-family: 'Inter', sans-serif;
+    font-size: 0.95rem;
+    transition: border-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+.form-control-custom::placeholder {
+    color: #64748b;
+}
+
+.form-control-custom:focus {
+    outline: none;
+    border-color: #14b8a6;
+    box-shadow: 0 0 0 3px rgba(20, 184, 166, 0.2);
+}
+
+/* Ícono del calendario en modo oscuro */
+.form-control-custom[type="date"]::-webkit-calendar-picker-indicator {
+    filter: invert(1);
+    cursor: pointer;
+}
+
+textarea.form-control-custom {
+    resize: vertical;
+    min-height: 95px;
+}
+
+/* Botones de acción */
+.form-actions {
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-end;
+    align-items: center;
+    gap: 14px;
+    margin-top: 10px;
+    padding-top: 18px;
+    border-top: 1px solid rgba(148, 163, 184, 0.15);
+}
+
+.btn-cancelar {
+    padding: 10px 22px;
+    text-decoration: none;
+    border-radius: 8px;
+    color: #cbd5e1;
+    background-color: #1e293b;
+    border: 1px solid #334155;
+    font-size: 0.95rem;
+    font-weight: 600;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    transition: background-color 0.2s ease, color 0.2s ease;
+}
+
+.btn-cancelar:hover {
+    background-color: #334155;
+    color: #ffffff;
+}
+
+.btn-enviar {
+    padding: 10px 26px;
+    border-radius: 8px;
+    background-color: #14b8a6;
+    color: #ffffff;
+    border: none;
+    font-size: 0.95rem;
+    font-weight: 700;
+    cursor: pointer;
+    transition: background-color 0.2s ease, transform 0.1s ease;
+}
+
+.btn-enviar:hover {
+    background-color: #0d9488;
+}
+
+.btn-enviar:active {
+    transform: scale(0.98);
+}
+
+/* Responsividad para móviles o pantallas pequeñas */
+@media (max-width: 768px) {
+    .form-grid-layout {
+        grid-template-columns: 1fr;
+    }
+
+    .form-card-container {
+        padding: 20px;
+    }
+
+    .form-actions {
+        flex-direction: column-reverse;
+        align-items: stretch;
+    }
+
+    .btn-cancelar,
+    .btn-enviar {
+        width: 100%;
+        text-align: center;
+    }
+}
